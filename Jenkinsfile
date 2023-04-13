@@ -20,7 +20,7 @@ pipeline {
 					def culprits = currentBuild.changeSets.collect { it.authorEmail }
                     def subject = 'Git checkout ' + (currentBuild.currentResult == 'SUCCESS' ? 'successful' : 'failed')
                     def body = 'The branch main was checked out ' + (currentBuild.currentResult == 'SUCCESS' ? 'successfully' : 'unsuccessfully') + '.\n\nChanges were made by: ' + culprits.join(', ')
-                    emailext subject: subject, body: body, to: 'vinayakakg7@gmail.com, vinayaka.kg@cyqurex.com', attachLog: true
+                    emailext subject: subject, body: body, to: 'vinayakakg7@gmail.com', attachLog: true
                 }
             }
         }
@@ -31,7 +31,7 @@ pipeline {
 				script {
                     def subject = 'Build ' + (currentBuild.currentResult == 'SUCCESS' ? 'successful' : 'failed')
                     def body = 'Maven Build was done ' + (currentBuild.currentResult == 'SUCCESS' ? 'successfully' : 'unsuccessfully')
-                    emailext subject: subject, body: body, to: 'vinayakakg7@gmail.com, vinayaka.kg@cyqurex.com', attachLog: true
+                    emailext subject: subject, body: body, to: 'vinayakakg7@gmail.com', attachLog: true
                 }
             }
           }
@@ -78,7 +78,7 @@ post {
      failure {
          
 	 emailext (
-	     	  to: 'vinayakakg7@gmail.com, vinayaka.kg@cyqurex.com',
+	     	  to: 'vinayakakg7@gmail.com',
                   subject: "Build failed in ${currentBuild.fullDisplayName}",
                   body: """${env.JOB_NAME} build #${env.BUILD_NUMBER} has failed.
                       Please investigate and fix the issue\n More info at: ${env.BUILD_URL}""",
@@ -90,7 +90,7 @@ post {
      success {
        
 	  emailext (
-	           to: 'vinayakakg7@gmail.com, vinayaka.kg@cyqurex.com',
+	           to: 'vinayakakg7@gmail.com',
                    subject: "Build successful in ${currentBuild.fullDisplayName}",
                    body: """${env.JOB_NAME} build #${env.BUILD_NUMBER} has succeeded.
                        Congratulations!\n More info at: ${env.BUILD_URL}""",

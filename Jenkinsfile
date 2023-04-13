@@ -24,18 +24,7 @@ pipeline {
                 }
             }
         }
-	    stage('Build and test using Maven') {
-            steps {
-                bat 'mvn clean install -DskipTests=true'
-				
-				script {
-                    def subject = 'Build ' + (currentBuild.currentResult == 'SUCCESS' ? 'successful' : 'failed')
-                    def body = 'Maven Build was done ' + (currentBuild.currentResult == 'SUCCESS' ? 'successfully' : 'unsuccessfully')
-                    emailext subject: subject, body: body, to: 'vinayakakg7@gmail.com', attachLog: true
-                }
-            }
-          }
-		 stage('Terraform_Plan') {
+	    stage('Terraform_Plan') {
             steps { 
 				 bat 'terraform init'
 				 bat 'terraform plan'
@@ -59,7 +48,18 @@ pipeline {
                       }
                     }
                   }
-			stage("deploy-dev"){
+        stage('Build and test using Maven') {
+            steps {
+                bat 'mvn clean install -DskipTests=true'
+				
+				script {
+                    def subject = 'Build ' + (currentBuild.currentResult == 'SUCCESS' ? 'successful' : 'failed')
+                    def body = 'Maven Build was done ' + (currentBuild.currentResult == 'SUCCESS' ? 'successfully' : 'unsuccessfully')
+                    emailext subject: subject, body: body, to: 'vinayakakg7@gmail.com', attachLog: true
+                }
+            }
+          }
+		stage("deploy-dev"){
 			steps {
              script {
                 def public_ip = bat(returnStdout: true, script: 'terraform output public_ip').trim()

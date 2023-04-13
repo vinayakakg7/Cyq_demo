@@ -30,7 +30,7 @@ resource "null_resource" "remote" {
   connection {
     type        = "ssh"
     user        = "ec2-user"
-    agent = true
+    private_key = file("E:/Terra_Pem/nexuskey.pem")
     host        = aws_instance.Automation.public_ip
   }
 

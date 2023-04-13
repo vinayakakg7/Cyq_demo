@@ -62,7 +62,7 @@ pipeline {
 			stage("deploy-dev"){
 			steps {
              script {
-                def public_ip = sh(returnStdout: true, script: 'terraform output public_ip').trim()
+                def public_ip = bat(returnStdout: true, script: 'terraform output public_ip').trim()
                 sshagent(['Deploy_Dev']) {
 				        public_ip='${(terraform output public_ip)}'
 

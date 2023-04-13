@@ -1,5 +1,5 @@
 provider "aws" {
-  shared_credentials_file = ["/home/ansible/.aws/credentials"]
+  shared_credentials_files = ["/home/ansible/.aws/credentials"]
   shared_config_files      = ["/home/ansible/.aws/config"]
   profile = "aws"
   region = "ap-south-1"

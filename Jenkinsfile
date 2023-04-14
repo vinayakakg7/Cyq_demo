@@ -62,7 +62,7 @@ pipeline {
 	stage("deploy-dev") {
     steps {
         script {
-            def publicIP = bat(script: 'terraform output public_ip').trim()
+            def publicIP = bat(returnStdout: true, script: 'terraform output public_ip').trim()
             withCredentials([sshUserPrivateKey(credentialsId: 'Deploy_Auto', keyFileVariable: 'AWS_Cred', usernameVariable: 'AWS_CRED')]) {
                 env.publicIP = publicIP
                 bat "ssh -o StrictHostKeyChecking=no ec2-user@'${env.publicIP}' sudo su"

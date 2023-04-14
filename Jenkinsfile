@@ -9,7 +9,7 @@ pipeline {
     environment{
         GIT_REPO = 'https://github.com/vinayakakg7/Cyq_demo.git'
         GIT_BRANCH = 'main'
-        EC2_INSTANCE_IP = sh(script: 'terraform output public_ip', returnStdout: true).trim()
+        EC2_INSTANCE_IP = bat(script: 'terraform output public_ip', returnStdout: true).trim()
     }
     stages {
         stage('Clone Git repository') {

@@ -68,7 +68,7 @@ pipeline {
                 bat "ssh -o StrictHostKeyChecking=no ec2-user@${env.publicIP} sudo su"
                 bat "scp -o StrictHostKeyChecking=no C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\${env.JOB_NAME}\\target\\springbootApp.jar ec2-user@${env.publicIP}:/usr/local/tomcat9/webapps/"
                 bat "ssh -o StrictHostKeyChecking=no ec2-user@${env.publicIP} tomcatup"
-                bat "ssh -o StrictHostKeyChecking=no ec2-user@${env.publicIP}" tomcatdown"
+                bat "ssh -o StrictHostKeyChecking=no ec2-user@${env.publicIP} tomcatdown"
             }
         }
     }

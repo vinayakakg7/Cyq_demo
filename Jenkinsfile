@@ -64,10 +64,10 @@ pipeline {
         script {
             def publicIP = bat(returnStdout: true, script: 'terraform output -raw public_ip').trim()
             withCredentials([sshUserPrivateKey(credentialsId: 'Deploy_Auto', keyFileVariable: 'AWS_Cred', usernameVariable: 'AWS_CRED')]) {
-                bat "ssh -o StrictHostKeyChecking=no ec2-user@'${publicIP}' 'sudo su'"
-                bat "scp -o StrictHostKeyChecking=no C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\${env.JOB_NAME}\\target\\springbootApp.jar ec2-user@'${publicIP}': /usr/local/tomcat9/webapps/"
-                bat "ssh -o StrictHostKeyChecking=no ec2-user@'${publicIP}' 'tomcatup'"
-                bat "ssh -o StrictHostKeyChecking=no ec2-user@'${publicIP}' 'tomcatdown'"
+                bat "ssh -o StrictHostKeyChecking=no ec2-user@${publicIP} sudo su"
+                bat "scp -o StrictHostKeyChecking=no C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\${env.JOB_NAME}\\target\\springbootApp.jar ec2-user@${publicIP}: /usr/local/tomcat9/webapps/"
+                bat "ssh -o StrictHostKeyChecking=no ec2-user@${publicIP} tomcatup"
+                bat "ssh -o StrictHostKeyChecking=no ec2-user@${publicIP} tomcatdown"
             }
         }
     }

@@ -9,6 +9,7 @@ pipeline {
     environment{
         GIT_REPO = 'https://github.com/vinayakakg7/Cyq_demo.git'
         GIT_BRANCH = 'main'
+        EC2_INSTANCE_IP = sh(script: 'terraform output public_ip', returnStdout: true).trim()
     }
     stages {
         stage('Clone Git repository') {
@@ -62,13 +63,13 @@ pipeline {
 	stage("deploy-dev") {
     steps {
         script {
-            def publicIP = bat(returnStdout: true, script: 'terraform output public_ip').trim()
+           // def publicIP = bat(returnStdout: true, script: 'terraform output public_ip').trim()
             withCredentials([sshUserPrivateKey(credentialsId: 'Deploy_Auto', keyFileVariable: 'AWS_Cred', usernameVariable: 'AWS_CRED')]) {
-                env.publicIP = publicIP
-                bat "ssh -o StrictHostKeyChecking=no ec2-user@${env.publicIP} sudo su"
-                bat "scp -o StrictHostKeyChecking=no C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\${env.JOB_NAME}\\target\\springbootApp.jar ec2-user@${env.publicIP}:/usr/local/tomcat9/webapps/"
-                bat "ssh -o StrictHostKeyChecking=no ec2-user@${env.publicIP} tomcatup"
-                bat "ssh -o StrictHostKeyChecking=no ec2-user@${env.publicIP} tomcatdown"
+             //   env.publicIP = publicIP
+                bat "ssh -o StrictHostKeyChecking=no ec2-user@${env.EC2_INSTANCE_IP} sudo su"
+                bat "scp -o StrictHostKeyChecking=no C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\${env.JOB_NAME}\\target\\springbootApp.jar ec2-user@${env.EC2_INSTANCE_IP}:/usr/local/tomcat9/webapps/"
+                bat "ssh -o StrictHostKeyChecking=no ec2-user@${env.EC2_INSTANCE_IP} tomcatup"
+                bat "ssh -o StrictHostKeyChecking=no ec2-user@${env.EC2_INSTANCE_IP} tomcatdown"
             }
         }
     }

@@ -27,8 +27,8 @@ pipeline {
         }
 	    stage('Terraform_Plan') {
             steps { 
-				 bat 'terraform init'
-				 bat 'terraform plan'
+				 sh 'terraform init'
+				 sh 'terraform plan'
 				}
 			}
 		stage('Terraform action') {
@@ -40,18 +40,18 @@ pipeline {
       // Check if the "terra" parameter is set to "destroy"
 					if (terra == 'destroy') {
                       echo 'Destroying infrastructure...'
-                      bat "terraform destroy --auto-approve"
+                      sh "terraform destroy --auto-approve"
                       error "Aborting the pipeline after destroying infrastructure" // Stop the pipeline after the destroy command
                     } else {
                           echo 'Applying infrastructure...'
-                          bat "terraform apply --auto-approve"
+                          sh "terraform apply --auto-approve"
                         }
                       }
                     }
                   }
         stage('Build and test using Maven') {
             steps {
-                bat 'mvn clean install -DskipTests=true'
+                sh 'mvn clean install -DskipTests=true'
 				
 				script {
                     def subject = 'Build ' + (currentBuild.currentResult == 'SUCCESS' ? 'successful' : 'failed')
@@ -63,17 +63,17 @@ pipeline {
 	stage("deploy-dev") {
     steps {
         script {
-           def publicIP = bat(returnStdout: true, script: "terraform output public_ip").trim().replace('"', '')
+           def publicIP = sh(returnStdout: true, script: "terraform output public_ip").trim().replace('"', '')
            env.publicIP = publicIP
           // def publicIP = bat(returnStdout: true, script: "terraform output public_ip | Out-String").trim().replace('\r\n', '')
          // def publicIP = bat(returnStdout: true, script: "terraform output public_ip | findstr /R /C:\"^[0-9].*\"").trim().replace('\r\n', '')
 
 
             withCredentials([sshUserPrivateKey(credentialsId: 'Deploy_Auto', keyFileVariable: 'AWS_Cred', usernameVariable: 'AWS_CRED')]) {
-                bat "ssh -T -o StrictHostKeyChecking=no ec2-user@"${env.publicIP}" sudo su"
-                bat "scp -T -o StrictHostKeyChecking=no C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\${env.JOB_NAME}\\target\\springbootApp.jar ec2-user@"${env.publicIP}" :/usr/local/tomcat9/webapps/ "
-                bat "ssh -T -o StrictHostKeyChecking=no ec2-user@"${env.publicIP}" tomcatup"
-                bat "ssh -T -o StrictHostKeyChecking=no ec2-user@"${env.publicIP}" tomcatdown"
+                sh "ssh -T -o StrictHostKeyChecking=no ec2-user@"${env.publicIP}" sudo su"
+                sh "scp -T -o StrictHostKeyChecking=no C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\${env.JOB_NAME}\\target\\springbootApp.jar ec2-user@"${env.publicIP}" :/usr/local/tomcat9/webapps/ "
+                sh "ssh -T -o StrictHostKeyChecking=no ec2-user@"${env.publicIP}" tomcatup"
+                sh "ssh -T -o StrictHostKeyChecking=no ec2-user@"${env.publicIP}" tomcatdown"
             }
         }
     }

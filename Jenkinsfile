@@ -71,7 +71,7 @@ pipeline {
 
             sshagent(['Deploy_Dev']) {
                 sh "ssh -T -o StrictHostKeyChecking=no ec2-user@${publicIP} sudo su"
-                sh "scp -T -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/${env.JOB_NAME}/springbootApp.jar ec2-user@${publicIP} :/usr/local/tomcat9/webapps/ "
+                sh "scp -T -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/${env.JOB_NAME}/target/springbootApp.jar ec2-user@${publicIP}:/usr/local/tomcat9/webapps/ "
                 sh "ssh -T -o StrictHostKeyChecking=no ec2-user@${publicIP} tomcatup"
                 sh "ssh -T -o StrictHostKeyChecking=no ec2-user@${publicIP} tomcatdown"
             }

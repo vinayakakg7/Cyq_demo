@@ -1,8 +1,7 @@
 provider "aws" {
   region = "ap-south-1"
-  shared_credentials_file = "/home/ansible/.aws/credentials"
-  shared_config_files = ["/home/ansible/.aws/config", ]
-  profile = "aws"
+  access_key = "AKIA2O2OMWUCBIJKCBUL"
+  secret_key = "m7hSpobMmcLDy9CYLnf97Hl2no9bYtnR2rH3izHf"
 }
 
 data "aws_security_group" "example" {

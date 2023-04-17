@@ -64,7 +64,9 @@ pipeline {
     steps {
         script {
            //def publicIP = bat(returnStdout: true, script: "terraform output public_ip").trim().replace('"', '')
-           def publicIP = bat(returnStdout: true, script: "terraform output public_ip | Out-String").trim().replace('\r\n', '')
+          // def publicIP = bat(returnStdout: true, script: "terraform output public_ip | Out-String").trim().replace('\r\n', '')
+          def publicIP = bat(returnStdout: true, script: "terraform output public_ip | findstr /R /C:\"^[0-9].*\"").trim().replace('\r\n', '')
+
 
             withCredentials([sshUserPrivateKey(credentialsId: 'Deploy_Auto', keyFileVariable: 'AWS_Cred', usernameVariable: 'AWS_CRED')]) {
              //  env.publicIP = publicIP

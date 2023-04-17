@@ -31,7 +31,7 @@ resource "null_resource" "remote" {
   connection {
     type        = "ssh"
     user        = "ec2-user"
-    private_key = file("/home/ansible/nexuskey.pem")
+    private_key = file("/home/ansible/Desktop/nexuskey.pem")
     host        = aws_instance.Automation.public_ip
   }
 

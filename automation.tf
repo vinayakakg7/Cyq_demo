@@ -1,7 +1,7 @@
 provider "aws" {
   region = "ap-south-1"
-  access_key = "AKIA2O2OMWUCMGAPOKVT"
-  secret_key = "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"
+  access_key = "AKIA2O2OMWUCAO7KDOYC"
+  secret_key = "gYlRHsEcdHY25Y5aiLENwo78g5EiXVqfV9nosOGX"
 }
 
 data "aws_security_group" "example" {

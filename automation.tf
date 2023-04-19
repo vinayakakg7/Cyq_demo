@@ -1,6 +1,6 @@
 provider "aws" {
   region = "ap-south-1"
-  Profile = "default"
+  profile = "default"
 }
 
 data "aws_security_group" "example" {

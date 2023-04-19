@@ -27,8 +27,8 @@ pipeline {
         }
 	    stage('Terraform_Plan') {
             steps { 
-				 sh 'terraform init'
-				 sh 'terraform plan'
+				 bat 'terraform init'
+				 bat 'terraform plan'
 				}
 			}
 		stage('Terraform action') {
@@ -40,18 +40,18 @@ pipeline {
       // Check if the "terra" parameter is set to "destroy"
 					if (terra == 'destroy') {
                       echo 'Destroying infrastructure...'
-                      sh "terraform destroy --auto-approve"
+                      bat "terraform destroy --auto-approve"
                       error "Aborting the pipeline after destroying infrastructure" // Stop the pipeline after the destroy command
                     } else {
                           echo 'Applying infrastructure...'
-                          sh "terraform apply --auto-approve"
+                          bat "terraform apply --auto-approve"
                         }
                       }
                     }
                   }
         stage('Build and test using Maven') {
             steps {
-                sh 'mvn clean install -DskipTests=true'
+                bat 'mvn clean install -DskipTests=true'
 				
 				script {
                     def subject = 'Build ' + (currentBuild.currentResult == 'SUCCESS' ? 'successful' : 'failed')
@@ -70,13 +70,13 @@ pipeline {
 
 
             sshagent(['Deploy_Dev']) {
-                sh "ssh -T -o StrictHostKeyChecking=no ec2-user@${publicIP} 'sudo su'"
-                sh "ssh -T -o StrictHostKeyChecking=no ec2-user@${publicIP} 'cd /usr/local/tomcat9/webapps/'"
-                sh "ssh -T -o StrictHostKeyChecking=no ec2-user@${publicIP} 'sudo su'"
+                bat "ssh -T -o StrictHostKeyChecking=no ec2-user@${publicIP} 'sudo su'"
+                bat "ssh -T -o StrictHostKeyChecking=no ec2-user@${publicIP} 'cd /usr/local/tomcat9/webapps/'"
+                bat "ssh -T -o StrictHostKeyChecking=no ec2-user@${publicIP} 'sudo su'"
                 //sh "ssh -T -o StrictHostKeyChecking=no ec2-user@${publicIP} 'cd webapps'"
-                sh "scp -T -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/${env.JOB_NAME}/target/springbootApp.jar ec2-user@${publicIP}:./ "
-                sh "ssh -T -o StrictHostKeyChecking=no ec2-user@${publicIP} tomcatup"
-                sh "ssh -T -o StrictHostKeyChecking=no ec2-user@${publicIP} tomcatdown"
+               // sh "scp -T -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/${env.JOB_NAME}/target/springbootApp.jar ec2-user@${publicIP}:./ "
+                bat "ssh -T -o StrictHostKeyChecking=no ec2-user@${publicIP} tomcatup"
+                bat "ssh -T -o StrictHostKeyChecking=no ec2-user@${publicIP} tomcatdown"
             }
         }
     }
